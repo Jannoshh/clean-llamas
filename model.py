@@ -102,7 +102,7 @@ class GroupedMultiQueryAttention(nn.Module):
     ) -> Float[Tensor, "b posn d_model"]:
         # Calculate query, key and value vectors
         q = einsum(normalized_resid_pre, self.W_Q,
-                   "b posn d_model, n_q_heads d_model d_head ->  b posn n_q_heads d_head")
+                   "b posn d_model, n_q_heads d_model d_head -> b posn n_q_heads d_head")
         k = einsum(normalized_resid_pre, self.W_K,
                    "b posn d_model, n_kv_heads d_model d_head -> b posn n_kv_heads d_head")
         v = einsum(normalized_resid_pre, self.W_V,
@@ -136,7 +136,7 @@ class GroupedMultiQueryAttention(nn.Module):
         all_ones = torch.ones(attn_scores.shape[2:], device=attn_scores.device)
         mask = torch.triu(all_ones, diagonal=1).bool()
         # Apply the mask to attention scores, then return the masked scores
-        attn_scores.masked_fill_(mask, self.IGNORE)
+        attn_scores.masked_fill_(mask, self.IGNORE.float())
         return attn_scores
 
 
